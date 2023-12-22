@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Property Filter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      max-width: 100%;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .step {
+      flex: 1;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 0 10px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .list li {
+      cursor: pointer;
+      padding: 5px 10px;
+      margin-bottom: 5px;
+      background-color: #f9f9f9;
+      border-radius: 3px;
+    }
+    .list li:hover {
+      background-color: #e5e5e5;
+    }
+    .selected-properties {
+      flex: 1;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 0 10px;
+    }
+    .selected-properties ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .selected-properties li {
+      margin-bottom: 5px;
+      padding: 5px 10px;
+      background-color: #f9f9f9;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="step" id="importForm">
+      <h2>Step 1: Select File</h2>
+      <form>
+        <div class="form-group">
+          <label for="jsonFile">Choose File:</label>
+          <input type="file" id="jsonFile" accept=".json, .csv" required>
+          <p class="file-description">Supported file types: JSON, CSV</p>
+        </div>
+      </form>
+    </div>
+
+    <div class="step" id="formatForm">
+      <h2>Step 2: Specify Format</h2>
+      <form>
+        <div class="form-group">
+          <label for="fileType">File Type:</label>
+          <select id="fileType">
+            <option value="json">JSON</option>
+            <option value="csv">CSV</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="characterEncoding">Character Encoding:</label>
+          <select id="characterEncoding">
+            <option value="UTF-8">UTF-8</option>
+            <option value="json">JSON</option>
+            <option value="csv">CSV</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="delimiter">Delimiter:</label>
+          <select id="delimiter">
+            <option value=",">Comma</option>
+            <option value="json">JSON</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="hasHeader">Has Header:</label>
+          <input type="checkbox" id="hasHeader">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="step properties" style="width: 100%">
+    <h2>Step 3: Display Handling</h2>
+    <label for="selectedFields">Select Fields to be Displayed:</label>
+    <div id="fieldsSelection">
+      <ul class="list" id="allProperties">
+        <li>Property 1</li>
+        <li>Property 2</li>
+        <li>Property 3</li>
+        <!-- Add more properties here -->
+      </ul>
+      <ul class="selected-properties" id="selectedProperties">
+        <!-- Selected properties will be displayed here -->
+      </ul>
+    </div>
+    <div id="jsonDataDisplay">
+        <h2>JSON Data</h2>
+        <table id="jsonData"></table>
+      </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const allProperties = document.getElementById('allProperties');
+      const selectedProperties = document.getElementById('selectedProperties');
+
+      allProperties.addEventListener('click', function(event) {
+        if (event.target.tagName === 'LI') {
+          const property = event.target.textContent;
+          const li = document.createElement('li');
+          li.textContent = property;
+          selectedProperties.appendChild(li);
+          allProperties.removeChild(event.target);
+        }
+      });
+
+      selectedProperties.addEventListener('click', function(event) {
+        if (event.target.tagName === 'LI') {
+          const property = event.target.textContent;
+          const li = document.createElement('li');
+          li.textContent = property;
+          allProperties.appendChild(li);
+          selectedProperties.removeChild(event.target);
+        }
+      });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Your existing event listeners and functionality
+  
+        const fileInput = document.getElementById('jsonFile');
+        fileInput.addEventListener('change', function(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const content = e.target.result;
+              try {
+                const data = JSON.parse(content);
+                const propertiesList = document.getElementById('allProperties');
+                propertiesList.innerHTML = ''; // Clear existing properties
+  
+                // Extract properties from JSON and populate the list
+                for (const productId in data.products) {
+                  const product = data.products[productId];
+                  for (const key in product) {
+                    if (!propertiesList.querySelector(`li[data-property="${key}"]`)) {
+                      const li = document.createElement('li');
+                      li.textContent = key;
+                      li.setAttribute('data-property', key);
+                      propertiesList.appendChild(li);
+                    }
+                  }
+                }
+  
+                // Display JSON data in a table
+                const jsonDataDisplay = document.getElementById('jsonData');
+                const headers = Array.from(propertiesList.querySelectorAll('li')).map(li => li.getAttribute('data-property'));
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const tbody = document.createElement('tbody');
+  
+                // Create table headers
+                let headerRow = '<tr>';
+                headers.forEach(header => {
+                  headerRow += `<th>${header}</th>`;
+                });
+                headerRow += '</tr>';
+                thead.innerHTML = headerRow;
+  
+                // Create table rows with data
+                let tableRows = '';
+                for (const productId in data.products) {
+                  tableRows += '<tr>';
+                  const product = data.products[productId];
+                  headers.forEach(header => {
+                    tableRows += `<td>${product[header]}</td>`;
+                  });
+                  tableRows += '</tr>';
+                }
+                tbody.innerHTML = tableRows;
+  
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                jsonDataDisplay.innerHTML = '';
+                jsonDataDisplay.appendChild(table);
+              } catch (error) {
+                console.error('Invalid JSON file');
+              }
+            };
+            reader.readAsText(file);
+          }
+        });
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    /* Styling for the green strip */
+    .green-strip {
+      width: 10px;
+      height: 100%;
+      background-color: #3dd1a5;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    /* Styles for the individual metric divs */
+    .metric {
+      width: 20%; /* Adjust as needed */
+      margin: 12px;
+      padding: 10px;
+      border: 2px solid #ccc;
+     text-align:justify;
+      position: relative;
+      display: inline-block;
+      vertical-align: top;
+      background-color: aliceblue;
+        box-shadow:white;
+    } 
+
+    /* Text at the top of the metric div */
+   
+    /* Value at the bottom of the metric div */
+    .metric h3 ,.metric p {
+    margin-left: 10 px;
+      text-align: left;
+      font-size: 15px;
+      color: #000000; /* Green color for the value */
+      font-weight: bold;
+    }
+    body{
+       background-color:rgba(128, 128, 128, 0.425); 
+    }
+
+
+
+
+    .chart-container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: center;
+  }
+
+  .chart {
+      width: 100%;
+      max-width: 50%;
+  }
+ 
+        
+      </style>
+  
+</head>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+
+  <div id="company-metrics-dashboard">
+    <h1>Company Metrics</h1>
+    <div class="row1">
+    <div class="metric">
+      <div class="green-strip"></div>
+      <text-align></text-align>
+      <h2>$406,411.29</h2>
+      <p>Total Revenue</p>
+    </div>
+    <div class="metric">
+        <div class="green-strip"></div>
+        <h2>$620</h2>
+        <p>Total Jobs Avg</p>
+      </div>
+      <div class="metric">
+        <div class="green-strip"></div>
+        <h2>655</h2>
+        <p>Tickets Created</p>
+      </div>
+      <div class="metric">
+        <div class="green-strip"></div>
+        <h2>735</h2>
+        <p>Tickets Scheduled</p>
+      </div>    
+ </div>
+
+ <div class="row2">
+    <div class="metric">
+         <div class="green-strip"></div>
+          <h2>$110,448.8</h2>
+          <p>Outstanding Amount</p>
+          </div>
+    
+    
+          <div class="metric">
+        <div class="green-strip"></div>
+        <h2>105</h2>
+        <p>Membership sold</p>
+        </div>
+
+        <div class="metric">
+        <div class="green-strip"></div>
+        <h2>436</h2>
+        <p>Jobs Completed</p>
+      </div>
+
+      <div class="metric">
+        <div class="green-strip"></div>
+        <h2>65</h2>
+        <p>Total Canceled</p>
+      </div>    
+    
+    </div>
+
+ 
+
+  </div>
+  <div class="chart-container">
+    <div id="myPlot1" class="chart">
+        <script>
+            const cities1 = ["Everett", "Seattle", "Lynnwood", "Bothell", "Mukilteo", "Edmonds"];
+            const xArray1 = cities1.map(() => Math.floor(Math.random() * 45000) + 5000); // Random values from 5000 to 50000
+            const yArray1 = cities1;
+
+            const data1 = [{
+                x: xArray1,
+                y: yArray1,
+                type: "bar",
+                orientation: "h",
+                marker: { color: "#44b999" } // Color set to #44b999
+            }];
+
+            const layout1 = {
+                xaxis: {
+                    range: [5000, 50000] // Adjusting x-axis range
+                },
+                title: {
+                    text: "",
+                }
+            };
+
+            Plotly.newPlot("myPlot1", data1, layout1);
+        </script>
+    </div>
+
+    <div id="myPlot2" class="chart">
+      
+        <script>
+            const cities2 = ["Everett", "Seattle", "Lynnwood", "Bothell", "Mukilteo", "Edmonds"];
+            const xArray2 = cities2.map(() => Math.floor(Math.random() * 45000) + 5000); // Random values from 5000 to 50000
+            const yArray2 = cities2;
+
+            const data2 = [{
+                x: xArray2,
+                y: yArray2,
+                type: "bar",
+                orientation: "h",
+                marker: { color: "#44b999" } // Color set to #44b999
+            }];
+
+            const layout2 = {
+                xaxis: {
+                    range: [5000, 50000] // Adjusting x-axis range
+                },
+                title: {
+                    text: "",
+                }
+            };
+
+            Plotly.newPlot("myPlot2", data2, layout2);
+        </script>
+    </div>
+</div>
+</div>
+
+
+
+</body>
+</html>
